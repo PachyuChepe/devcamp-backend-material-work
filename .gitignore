@@ -37,3 +37,6 @@ lerna-debug.log*
 # pem
 cert.pem
 key.pem
+
+# .env
+.env
