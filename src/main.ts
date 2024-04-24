@@ -9,8 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // 기본 포트 설정
-  const port = configService.get<number>('SERVER_PORT') || 3000;
+  // 환경변수 설정
+  const port = configService.get<number>('SERVER_PORT') || 4000;
+  const env = configService.get<string>('SERVER_RUNTIME');
+  const serviceName = configService.get<string>('SERVER_SERVICE_NAME');
 
   // 인증 키 파일 경로 설정
   const keyPath = path.join(__dirname, '..', 'key.pem');
@@ -26,11 +28,15 @@ async function bootstrap() {
     https
       .createServer(httpsOptions, app.getHttpAdapter().getInstance())
       .listen(port);
-    console.log(`HTTPS server running on port ${port}`);
+    console.log(
+      `HTTPS server running on\nruntime: ${env}\nport: ${port}\nserviceName: ${serviceName}`,
+    );
   } else {
     // 인증서가 없을 경우 HTTP로 실행
     await app.listen(port);
-    console.log(`HTTP server running on port ${port}`);
+    console.log(
+      `HTTP server running on\nruntime: ${env}\nport: ${port}\nserviceName: ${serviceName}`,
+    );
   }
 }
 
