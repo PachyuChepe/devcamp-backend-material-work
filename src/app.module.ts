@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { validationSchema } from './config/validation.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 
@@ -34,6 +35,7 @@ import { DataSource } from 'typeorm';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
