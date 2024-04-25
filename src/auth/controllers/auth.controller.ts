@@ -1,11 +1,14 @@
 // src/auth/controllers/auth.controller.ts
-import { Body, Controller, Post } from '@nestjs/common';
-import { UserService } from '../services';
-import { CreateUserDto, SignupResDto } from '../dto';
+import { Body, Controller, Post, Req } from '@nestjs/common';
+import { AuthService, UserService } from '../services';
+import { CreateUserDto, LoginReqDto, LoginResDto, SignupResDto } from '../dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto): Promise<SignupResDto> {
@@ -16,5 +19,24 @@ export class AuthController {
       email: user.email,
       phone: user.phone,
     };
+  }
+
+  @Post('login')
+  async login(
+    @Req() req,
+    @Body() loginReqDto: LoginReqDto,
+  ): Promise<LoginResDto> {
+    const { ip, method, originalUrl } = req;
+    const reqInfo = {
+      ip,
+      endpoint: `${method} ${originalUrl}`,
+      ua: req.headers['user-agent'] || '',
+    };
+
+    return this.authService.login(
+      loginReqDto.email,
+      loginReqDto.password,
+      reqInfo,
+    );
   }
 }
