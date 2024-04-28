@@ -12,3 +12,13 @@ Content-Type: application/json
 	"phone": "010-1234-5678",
 	"role": "admin"
 }
+
+###
+# 사용자 로그인
+POST {{domain}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user1@gmail.com",
+  "password": "12345"
+}
